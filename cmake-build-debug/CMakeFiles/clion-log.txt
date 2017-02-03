@@ -1,2 +1,4 @@
-CMakeLists.txt not found in C:\Users\leroy\CLionProjects\Spatch
-Cannot load CMake project: Neither MinGW nor Cygwin is selected
+"C:\Program Files (x86)\JetBrains\CLion 2016.3.2\bin\cmake\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" C:\Users\fab_a\CLionProjects\Spatch
+-- Configuring done
+-- Generating done
+-- Build files have been written to: C:/Users/fab_a/CLionProjects/Spatch/cmake-build-debug

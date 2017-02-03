@@ -4,6 +4,6 @@ project(Spatch)
 set(CMAKE_CXX_STANDARD 11)
 
 set(SOURCE_FILES
-        main.cpp)
+        main.cpp server/Server.cpp server/Server.h server/main.cpp)
 
 add_executable(Spatch ${SOURCE_FILES})
