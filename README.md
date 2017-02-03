@@ -11,6 +11,7 @@ IPtable :
 
 	ipUser1|IPserverallowed1/IPserverallowed2/IPserverallowedn/...
     ipUser2|IPserverallowed1/IPserverallowed2/IPserverallowedn/...
+    ipUser3|BAN
 
 # Schema
 
@@ -41,3 +42,19 @@ Server Creation
 
 <h2>Fawzi</h2>
 Proxy
+
+ 
+ # command
+
+	connect [ipServer] : Connection to server
+	show servers : display list of server accessible
+    show users : display list of all users
+    
+   Admin command :
+   
+   	kick [user]
+    allow -u [user] -s [server]
+    ban [user]
+    forbid [user]
+   
+   

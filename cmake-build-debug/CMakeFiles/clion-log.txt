@@ -1,2 +1,4 @@
-CMakeLists.txt not found in C:\Users\leroy\CLionProjects\Spatch
-Cannot load CMake project: Neither MinGW nor Cygwin is selected
+/Applications/CLion.app/Contents/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /Users/Fawzi/CLionProjects/Spatch
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Users/Fawzi/CLionProjects/Spatch/cmake-build-debug
