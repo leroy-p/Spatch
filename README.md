@@ -53,8 +53,10 @@ Proxy
    Admin command :
    
    	kick [user]
-    allow -u [user] -s [server]
+    allow [user] [server]
     ban [user]
-    forbid [user]
+    forbid [user] [server]
+    public [server]  
+    private [server]
    
    
