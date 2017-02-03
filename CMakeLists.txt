@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.6)
-project(CLionProjects)
+project(Spatch)
 
 set(CMAKE_CXX_STANDARD 11)
 
 set(SOURCE_FILES
-        README.md)
+        main.cpp)
 
-add_executable(CLionProjects ${SOURCE_FILES})
+add_executable(Spatch ${SOURCE_FILES})
