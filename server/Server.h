@@ -9,18 +9,18 @@
 class Server {
 
 private:
-    Server();
+
+    Server(std::string, int);
 
     std::string name;
     std::string port;
-    std::string ip;
+
     void setName(std::string);
     void setPort(std::string);
-    void setIp(std::string);
+
 public:
     std::string getName();
     std::string getPort();
-    std::string getIp();
 
 
 
