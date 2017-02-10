@@ -8,8 +8,7 @@
 int handleFlags(int pString, char **pString1);
 
 // Usage : ./server -n [NbServs]
-void main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     // Here we handle different flags
     // we create a file that would have the summary of all server(s) config
 
@@ -17,13 +16,12 @@ void main(int argc, char **argv)
 
     std::list<Server> servers;
 
-
+    return 0;
 }
 
 int handleFlags(int count, char **values) {
 
     int res = count;
-
 
 
     return 0;
