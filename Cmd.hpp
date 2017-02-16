@@ -17,7 +17,6 @@ public:
   Cmd(std::string);
   ~Cmd();
   std::string getCmd() const;
-  void setCmd(std::string);
   int execCmd();
   void execConnect(char **);
   void execShow(char **);

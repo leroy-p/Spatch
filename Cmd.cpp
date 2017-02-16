@@ -9,6 +9,10 @@ Cmd::Cmd(std::string cmd) {
 Cmd::~Cmd() {
 }
 
+std::string Cmd::getCmd() const {
+  return this->cmd;
+}
+
 void Cmd::execConnect(char **cmds) {
   if (strcmp(cmds[0], "connect") == 0)
     std::cout << "CONNECT !" << std::endl;
