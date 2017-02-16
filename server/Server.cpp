@@ -12,13 +12,6 @@ std::string Server::getPort() {
     return std::string();
 }
 
-std::string Server::getIp() {
-    return std::string();
-}
-
-void Server::setIp(std::string ip) {
-    this->ip = ip;
-}
 
 void Server::setName(std::string name) {
     this->name =  name;
@@ -28,7 +21,9 @@ void Server::setPort(std::string port) {
     this->port = port;
 }
 
-Server::Server()
+Server::Server(std::string hostname, int port)
 {
     // Here we create the server
+
+
 }
