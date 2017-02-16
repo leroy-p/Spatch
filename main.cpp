@@ -1,7 +1,8 @@
-#include <iostream>
+#include "Cmd.hpp"
 
-int main()
-{
-    std::cout << "Hello, world !" << std::endl;
-    return 0;
+int main() {
+  char buf[4096];
+  std::cin.getline(buf, sizeof(buf));
+  Cmd *cmd = new Cmd(buf);
+  return cmd->execCmd();
 }
