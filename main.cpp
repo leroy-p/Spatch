@@ -1,7 +1,5 @@
-#include <iostream>
+#include "spatch-server/spatch.cpp"
 
-int main()
-{
-    std::cout << "Hello, world !" << std::endl;
-    return 0;
+int main() {
+    return init_spatch();
 }
