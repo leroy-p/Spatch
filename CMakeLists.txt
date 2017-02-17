@@ -4,6 +4,9 @@ project(Spatch)
 set(CMAKE_CXX_STANDARD 11)
 
 set(SOURCE_FILES
-        main.cpp server/Server.cpp server/Server.h server/main.cpp)
+        main.cpp
+        lib/libssh.h)
+
+LINK_DIRECTORIES(lib/)
 
 add_executable(Spatch ${SOURCE_FILES})
