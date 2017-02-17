@@ -8,6 +8,8 @@
 #include    <iostream>
 #include    "../lib/libssh.h"
 #include    <stdlib.h>
+#include    <cstdlib>
+#include    <stdio.h>
 
 #define     SERVER_PORT htons(63513)
 

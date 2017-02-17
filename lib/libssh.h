@@ -10,6 +10,6 @@
 #include "libssh_OSX/libssh.h"
 
 #else
-#include "libssh/lib/libssh.h"
+#include "./libssh/include/libssh.h"
 #endif
 #endif //SPATCH_LIBSSH_H

@@ -9,4 +9,6 @@ set(SOURCE_FILES
 
 LINK_DIRECTORIES(lib/)
 
+INCLUDE_DIRECTORIES(lib/)
+
 add_executable(Spatch ${SOURCE_FILES})
