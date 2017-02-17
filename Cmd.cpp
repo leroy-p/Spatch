@@ -1,0 +1,121 @@
+#include "Cmd.hpp"
+
+Cmd::Cmd(std::string cmd) {
+  this->cmd = cmd;
+  createCmds();
+  createFcts();
+}
+
+Cmd::~Cmd() {
+}
+
+std::string Cmd::getCmd() const {
+  return this->cmd;
+}
+
+void Cmd::execConnect(char **cmds) {
+  if (strcmp(cmds[0], "connect") == 0)
+    std::cout << "CONNECT !" << std::endl;
+  else
+    std::cout << "Command not found." << std::endl;
+}
+
+void Cmd::execShow(char **cmds) {
+  if (cmds[1] == NULL)
+    std::cout << "Command not found." << std::endl;
+  else if (strcmp(cmds[0], "show") == 0 && strcmp(cmds[1], "servers") == 0)
+    std::cout << "SHOW SERVERS" << std::endl;
+  else if (strcmp(cmds[0], "show") == 0 && strcmp(cmds[1], "users") == 0)
+    std::cout << "SHOW USERS" << std::endl;
+  else
+    std::cout << "Command not found." << std::endl;
+}
+
+void Cmd::execKick(char **cmds) {
+  if (strcmp(cmds[0], "kick") == 0)
+    std::cout << "KICK !" << std::endl;
+  else
+    std::cout << "Command not found." << std::endl;
+}
+
+void Cmd::execAllow(char **cmds) {
+  if (strcmp(cmds[0], "allow") == 0)
+    std::cout << "ALLOW !" << std::endl;
+  else
+    std::cout << "Command not found." << std::endl;
+}
+
+void Cmd::execBan(char **cmds) {
+  if (strcmp(cmds[0], "ban") == 0)
+    std::cout << "BAN !" << std::endl;
+  else
+    std::cout << "Command not found." << std::endl;
+}
+
+void Cmd::execForbid(char **cmds) {
+  if (strcmp(cmds[0], "show") == 0)
+    std::cout << "FORBID !" << std::endl;
+  else
+    std::cout << "Command not found." << std::endl;
+}
+
+void Cmd::execPublic(char **cmds) {
+  if (strcmp(cmds[0], "public") == 0)
+    std::cout << "PUBLIC !" << std::endl;
+  else
+    std::cout << "Command not found." << std::endl;
+}
+
+void Cmd::execPrivate(char **cmds) {
+  if (strcmp(cmds[0], "private") == 0)
+    std::cout << "PRIVATE !" << std::endl;
+  else
+    std::cout << "Command not found." << std::endl;
+}
+
+void Cmd::createCmds() {
+  this->cmds[0] = "connect";
+  this->cmds[1] = "show";
+  this->cmds[2] = "kick";
+  this->cmds[3] = "allow";
+  this->cmds[4] = "ban";
+  this->cmds[5] = "forbid";
+  this->cmds[6] = "public";
+  this->cmds[7] = "private";
+}
+
+void Cmd::createFcts() {
+  this->fcts[0] = &Cmd::execConnect;
+  this->fcts[1] = &Cmd::execShow;
+  this->fcts[2] = &Cmd::execKick;
+  this->fcts[3] = &Cmd::execAllow;
+  this->fcts[4] = &Cmd::execBan;
+  this->fcts[5] = &Cmd::execForbid;
+  this->fcts[6] = &Cmd::execPublic;
+  this->fcts[7] = &Cmd::execPrivate;
+}
+
+int Cmd::execCmd() {
+  char **cmds;
+  char *tmp;
+  int i = 0;
+
+  if ((cmds = (char **)malloc(3 * sizeof(char *))) == NULL) {
+    std::cerr << "Error: malloc failed" << std::endl;
+    return 1;
+  }
+  tmp = strtok((char *)this->cmd.c_str(), " \t");
+  while (tmp != NULL) {
+    cmds[i] = tmp;
+    tmp = strtok(NULL, " \t");
+    ++i;
+  }
+  for (int k = 0; k < 8; ++k) {
+    if (strcmp(this->cmds[k].c_str(), cmds[0]) == 0) {
+      (this->*fcts[k])(cmds);
+      return 0;
+    }
+  }
+  std::cout << "Command not found." << std::endl;
+  return 1;
+}
