@@ -5,7 +5,6 @@
 #ifndef SPATCH_LIBSSH_H
 #define SPATCH_LIBSSH_H
 
-#if __GNUC__
 #if __x86_64__
 
 #include "libssh_OSX/libssh.h"
