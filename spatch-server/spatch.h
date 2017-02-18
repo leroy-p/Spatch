@@ -6,7 +6,7 @@
 #define     SPATCH_SPATCH_H
 
 #include    <iostream>
-#include    "../lib/libssh.h"
+#include    <libssh.h>
 #include    <stdlib.h>
 
 #define     SERVER_PORT htons(63513)

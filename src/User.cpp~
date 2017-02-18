@@ -1,13 +1,15 @@
-#include "User.hpp"
+#include "../includes/User.hpp"
 
-User::User(std::string ip, std::string name) {
-  std::cout << "Bienvenue " << name << ", votre adresse IP est : " << ip << std::endl;
+User::User(std::string ip, std::string name, bool admin = false) {
+  std::cout << "User " << name << " (" << ip << ") has been created." << std::endl;
   this->ip = ip;
   this->name = name;
+  this->admin = admin;
   createIpAccess();
 }
 
 User::~User() {
+  std::cout << "User " << *this << " has been deleted." << std::endl;
 }
 
 std::string User::getIp() const {
@@ -18,6 +20,10 @@ std::string User::getName() const {
   return this->name;
 }
 
+bool User::isAdmin() const {
+  return this->admin;
+}
+
 int User::createIpAccess() {
   std::ifstream infile("config.txt");
   std::string line;
@@ -25,8 +31,8 @@ int User::createIpAccess() {
   char *tmp;
   int i = 0;
   
-  if ((sep = (char **)malloc(3 * sizeof(char *))) == NULL) {
-    std::cerr << "Error: malloc failed" << std::endl;
+  if ((sep = (char **)malloc(255 * sizeof(char *))) == NULL) {
+    std::cerr << "Error: malloc failed." << std::endl;
     return 1;
   }
   while (std::getline(infile, line)) {
@@ -48,8 +54,15 @@ bool User::isAutorized(std::string ip) {
   std::list<std::string>::iterator it;
   
   for (it = this->ipAccess.begin(); it != this->ipAccess.end(); ++it) {
-    if (ip.compare(*it) == 0)
+    if (ip.compare(*it) == 0) {
+      std::cout << "User " << *this << " has access to the server " << ip << "." << std::endl;
       return true;
+    }
   }
+  std::cout << "User " << *this << " does not have access to the server " << ip << "." << std::endl;
   return false;
+}
+
+std::ostream& operator<<(std::ostream& out, const User& user) {
+  return out << user.getName() << " (" << user.getIp() << ")";
 }

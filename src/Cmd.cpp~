@@ -1,4 +1,4 @@
-#include "Cmd.hpp"
+#include "../includes/Cmd.hpp"
 
 Cmd::Cmd(std::string cmd) {
   this->cmd = cmd;

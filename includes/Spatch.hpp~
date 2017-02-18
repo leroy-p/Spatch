@@ -1,0 +1,22 @@
+#ifndef SPATCH_HPP
+#define SPATCH_HPP
+
+#include "ServerFactory.hpp"
+
+class Spatch {
+private:
+  ServerFactory *serversList;
+  UserFactory *usersList;
+
+public:
+  Spatch();
+  ~Spatch();
+  ServerFactory *getServersList() const;
+  UserFactory *getUsersList() const;
+  int connectUser(User *);
+  int disconnectUser(User *);
+  int addServer(Server *);
+  int removeServer(Server *);
+};
+
+#endif

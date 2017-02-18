@@ -1,0 +1,53 @@
+#include "../includes/Cmd.hpp"
+#include "../includes/UserFactory.hpp"
+
+int main() {
+  UserFactory *users = new UserFactory();
+  User *toto = new User("127.0.0.1", "toto", true);
+  User *titi = new User("127.0.0.2", "titi", false);
+  User *tutu = new User("127.0.0.3", "tutu", false);
+  std::string name;
+  int check = 2;  
+  char buf[4096];
+  std::string ip;
+  User *u;
+  
+  users->addUser(toto);
+  users->addUser(titi);
+  users->addUser(tutu);
+  
+  users->printFactory();
+
+  while (check > 0) {
+    if (check == 2)
+      std::cout << std::endl << "Welcome to Spatch. Pease enter your username." << std::endl;
+    else if (check == 1)
+      std::cout << "Please enter another username." << std::endl;
+    std::cin >> name;
+    u = new User("127.0.0.4", name, false);
+    check = users->addUser(u);
+    if (check == 1)
+      delete u;
+  }
+  
+  users->printFactory();
+
+  check = 1;
+  while (check != 0) {
+    std::cout << "Enter server IP :" << std::endl;
+    std::cin >> ip;
+    if (u->isAutorized(ip) == true) {
+      check = 0;
+      std::cout << "Your are now connected to the server " << ip << std::endl;
+    }
+  }
+  
+  while (1) {
+    std::cin.getline(buf, sizeof(buf));
+    if (strcmp(buf, "") != 0) {
+      Cmd *cmd = new Cmd(buf);
+      cmd->execCmd();
+    }
+  } 
+  return 0;
+}

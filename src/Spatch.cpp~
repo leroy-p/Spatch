@@ -1,0 +1,55 @@
+#include "../includes/Spatch.hpp"
+
+Spatch::Spatch() {
+  this->serversList = new ServerFactory();
+  this->usersList = new UserFactory();
+  std::cout << "Welcome to Spatch." << std::endl;
+}
+
+Spatch::~Spatch() {
+  std::cout << "You have left Spatch." << std::endl;
+}
+
+ServerFactory *Spatch::getServersList() const {
+  return this->serversList;
+}
+
+UserFactory *Spatch::getUsersList() const {
+  return this->usersList;
+}
+
+int Spatch::connectUser(User *user) {
+  if (this->usersList->addUser(user) == 0) {
+    std::cout << user->getName() << " has connected to Spatch." << std::endl;
+    return 0;
+  }
+  std::cout << user->getName() << " is already connected to Spatch." << std::endl;
+  return 1;
+}
+
+int Spatch::disconnectUser(User *user) {
+  if (this->usersList->deleteUser(user) == 0) {
+    std::cout << user->getName() << " has disconnected to Spatch." << std::endl;
+    return 0;
+  }
+  std::cout << user->getName() << " is already disconnected to Spatch." << std::endl;
+  return 1;
+}
+
+int Spatch::addServer(Server *server) {
+  if (this->serversList->addServer(server) == 0) {
+    std::cout << server->getIp() << " has been added to Spatch." << std::endl;
+    return 0;
+  }
+  std::cout << server->getIp() << " is already in Spatch." << std::endl;
+  return 1;
+}
+
+int Spatch::removeServer(Server *server) {
+  if (this->serversList->deleteServer(server) == 0) {
+    std::cout << server->getIp() << " is removed to Spatch." << std::endl;
+    return 0;
+  }
+  std::cout << server->getIp() << " was already removed to Spatch." << std::endl;
+  return 1;
+}

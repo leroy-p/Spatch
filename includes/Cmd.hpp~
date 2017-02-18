@@ -1,3 +1,6 @@
+#ifndef CMD_HPP
+#define CMD_HPP
+
 #include <iostream>
 #include <cstring>
 #include <cstdlib>
@@ -29,3 +32,5 @@ public:
   void createCmds();
   void createFcts();
 };
+
+#endif
