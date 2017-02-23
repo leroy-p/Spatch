@@ -11,7 +11,7 @@
 class Cmd {
 public:
   typedef void (Cmd::*pf)(char **, UserFactory *, ServerFactory *, User *);
-  
+
 private:
   std::string cmd;
   std::string cmds[10];
@@ -22,6 +22,7 @@ public:
   Cmd();
   ~Cmd();
   std::string getCmd() const;
+  std::string getResponse() const;
   int execCmd(UserFactory *, ServerFactory *, User *);
   void setCmd(std::string);
   void execConnect(char **, UserFactory *, ServerFactory *, User *);

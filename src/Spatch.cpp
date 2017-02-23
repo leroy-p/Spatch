@@ -12,8 +12,156 @@ Spatch::~Spatch() {
   std::cout << "You have left Spatch." << std::endl;
 }
 
+void Spatch::sshStuff(){
+	ssh_message message;
+	int 				auth=0;
+	char 				buf[2048];
+	int 				i;
+	int 				sftp=0;
+	int 				r;
+	ssh_channel chan=0;
+  User *u;
+
+	do {
+			message=ssh_message_get(this->session);
+			if(!message)
+					break;
+			switch(ssh_message_type(message)){
+					case SSH_REQUEST_AUTH:
+							switch(ssh_message_subtype(message)){
+									case SSH_AUTH_METHOD_PASSWORD:
+											printf("User %s wants to auth with pass %s\n",
+														 ssh_message_auth_user(message),
+														 ssh_message_auth_password(message));
+														 if(strncmp(ssh_message_auth_password(message), "test", strlen("test")) == 0) {
+																//if(isFirstConnection(ssh_message_auth_user(message)) ||strncmp(ssh_message_auth_password(message), getUserPassword(ssh_message_auth_user(message)), strlen("test")) == 0) {
+                                u = new User(ssh_message_auth_user(message), true);
+                                std::string response = "Welcome to spatch.";
+                                ssh_channel_write(chan, response.c_str(), response.length());
+                                this->connectUser(u);
+                                auth=1;
+                                ssh_message_auth_reply_success(message,0);
+																			 onceConnected(u);
+																			 break;
+																	 }
+											// not authenticated, send default message
+									case SSH_AUTH_METHOD_NONE:
+									default:
+											ssh_message_auth_set_methods(message,SSH_AUTH_METHOD_PASSWORD);
+											ssh_message_reply_default(message);
+											break;
+							}
+							break;
+					default:
+							ssh_message_reply_default(message);
+			}
+			ssh_message_free(message);
+	} while (!auth);
+	if(!auth){
+			printf("auth error: %s\n",ssh_get_error(this->session));
+	}
+}
+
+void Spatch::onceConnected(User *u){
+	ssh_message message;
+	int 				auth=0;
+	char 				buf[2048];
+	int 				i;
+	int 				sftp=0;
+	int 				r;
+	ssh_channel chan=0;
+
+	do {
+			message=ssh_message_get(this->session);
+			if(message){
+					switch(ssh_message_type(message)){
+							case SSH_REQUEST_CHANNEL_OPEN:
+									if(ssh_message_subtype(message)==SSH_CHANNEL_SESSION){
+											chan=ssh_message_channel_request_open_reply_accept(message);
+											break;
+									}
+							default:
+							ssh_message_reply_default(message);
+					}
+					ssh_message_free(message);
+			}
+	} while(message && !chan);
+	if(!chan){
+			printf("error : %s\n",ssh_get_error(this->session));
+			ssh_finalize();
+	//		return 1;
+	}
+	do {
+			message=ssh_message_get(this->session);
+			if(message && ssh_message_type(message)==SSH_REQUEST_CHANNEL &&
+				 ssh_message_subtype(message)==SSH_CHANNEL_REQUEST_SHELL){
+							sftp=1;
+							ssh_message_channel_request_reply_success(message);
+							break;
+				 }
+			if(!sftp){
+					ssh_message_reply_default(message);
+			}
+			ssh_message_free(message);
+	} while (message && !sftp);
+	if(!sftp){
+			printf("error : %s\n",ssh_get_error(this->session));
+	}
+	printf("it works !\n");
+	do{
+			i=ssh_channel_read(chan,buf, 2048, 0);
+		 if(i>0) {
+          this->getCmd()->setCmd(buf);
+          this->getCmd()->execCmd(this->getUsersList(), this->getServersList(), u);
+          std::string response = this->getCmd()->getResponse();
+					ssh_channel_write(chan, response.c_str(), response.length());
+					if (write(1,buf,i) < 0) {
+							printf("error writing to buffer\n");
+					}
+			}
+	} while (i>0);
+
+}
+
+int Spatch::initSsh(){
+    ssh_bind sshbind;
+    int port = 4577;
+    int verbosity = SSH_LOG_PROTOCOL;
+		int 				r;
+
+    sshbind = ssh_bind_new();
+    this->session = ssh_new();
+
+    ssh_bind_options_set(sshbind, SSH_BIND_OPTIONS_DSAKEY, KEYS_FOLDER "ssh_host_dsa_key");
+    ssh_bind_options_set(sshbind, SSH_BIND_OPTIONS_RSAKEY, KEYS_FOLDER "ssh_host_rsa_key");
+
+    ssh_bind_options_set(sshbind, SSH_BIND_OPTIONS_BINDPORT, &port);
+    ssh_bind_options_set(sshbind, SSH_BIND_OPTIONS_LOG_VERBOSITY, &verbosity);
+   // ssh_bind_options_set(sshbind, SSH_OPTIONS_HOST, "0.0.0.0");
+    if(ssh_bind_listen(sshbind)<0){
+        printf("Error listening to socket: %s\n",ssh_get_error(sshbind));
+        return 1;
+    }
+    r=ssh_bind_accept(sshbind,this->session);
+    if(r==SSH_ERROR){
+      printf("error accepting a connection : %s\n",ssh_get_error(sshbind));
+      return 1;
+    }
+    if (ssh_handle_key_exchange(this->session)) {
+        printf("ssh_handle_key_exchange: %s\n", ssh_get_error(this->session));
+        return 1;
+    }
+		sshStuff();
+    ssh_disconnect(this->session);
+    ssh_bind_free(sshbind);
+    ssh_finalize();
+    return 0;
+}
+
+
 int Spatch::execSpatch() {
-  Server *s1 = new Server("111.11.11.1");
+  initSsh();
+/*  Server *s1 = new Server("111.11.11.1");
   Server *s2 = new Server("222.22.22.2");
   Server *s3 = new Server("333.33.33.3");
   User *u1 = new User("toto");
@@ -30,7 +178,7 @@ int Spatch::execSpatch() {
   this->connectUser(u1);
   this->connectUser(u2);
   this->connectUser(u3);
-  
+
   while (check > 0) {
     if (check == 2)
       std::cout << std::endl << "Pease enter your username." << std::endl;
@@ -53,7 +201,8 @@ int Spatch::execSpatch() {
       this->getCmd()->execCmd(this->getUsersList(), this->getServersList(), u);
     }
   }
-  return 1;
+  return 1;*/
+  return 0;
 }
 
 ServerFactory *Spatch::getServersList() const {

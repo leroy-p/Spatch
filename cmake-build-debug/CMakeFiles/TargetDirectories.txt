@@ -1,0 +1,3 @@
+/Users/Fawzi/CLionProjects/Spatch/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/Fawzi/CLionProjects/Spatch/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/Fawzi/CLionProjects/Spatch/cmake-build-debug/CMakeFiles/Spatch.dir

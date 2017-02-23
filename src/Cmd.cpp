@@ -14,6 +14,10 @@ std::string Cmd::getCmd() const {
   return this->cmd;
 }
 
+std::string Cmd::getResponse() const {
+  return this->response;
+}
+
 void Cmd::setCmd(std::string cmd) {
   this->cmd = cmd;
 }
@@ -28,7 +32,7 @@ void Cmd::execConnect(char **cmds, UserFactory *uf, ServerFactory *sf, User *use
       sf->getServerByIp(cmds[1])->connectUser(user);
     else {
       std::cout << "Error: cannot find server " << cmds[1] << " in Spatch." << std::endl;
-      this->response = "Error: cannot find server " + cmds[1] + " in Spatch.";
+      this->response = strcat("Error: cannot find server ", strcat(cmds[1], " in Spatch."));
     }
   }
   else {
