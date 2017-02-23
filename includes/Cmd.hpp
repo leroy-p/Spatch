@@ -16,6 +16,7 @@ private:
   std::string cmd;
   std::string cmds[10];
   pf fcts[10];
+  std::string response;
 
 public:
   Cmd();

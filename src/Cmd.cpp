@@ -2,6 +2,7 @@
 
 Cmd::Cmd() {
   this->cmd = "";
+  this->response = "";
   createCmds();
   createFcts();
 }
@@ -18,135 +19,201 @@ void Cmd::setCmd(std::string cmd) {
 }
 
 void Cmd::execConnect(char **cmds, UserFactory *uf, ServerFactory *sf, User *user) {
-  if (cmds[1] == NULL || cmds[2] != NULL)
+  if (cmds[1] == NULL || cmds[2] != NULL) {
     std::cout << "Syntax error. The command must be 'connect [ip server]'." << std::endl;
+    this->response = "Syntax error. The command must be 'connect [ip server]'.";
+  }
   else if (strcmp(cmds[0], "connect") == 0) {
     if (sf->isInList(cmds[1]) == true)
       sf->getServerByIp(cmds[1])->connectUser(user);
-    else
+    else {
       std::cout << "Error: cannot find server " << cmds[1] << " in Spatch." << std::endl;
+      this->response = "Error: cannot find server " + cmds[1] + " in Spatch.";
+    }
   }
-  else
+  else {
     std::cout << "Command not found. Type 'help' to see all available commands. Type 'exit' to disconnect." << std::endl;
+    this->response = "Command not found. Type 'help' to see all available commands. Type 'exit' to disconnect.";
+  }
 }
 
 void Cmd::execShow(char **cmds, UserFactory *uf, ServerFactory *sf, User *user) {
-  if (strcmp(cmds[0], "show") != 0)
+  if (strcmp(cmds[0], "show") != 0) {
     std::cout << "Command not found. Type 'help' to see all available commands. Type 'exit' to disconnect." << std::endl;
-  if (cmds[1] == NULL || cmds[2] != NULL || (strcmp(cmds[1], "users") != 0 && strcmp(cmds[1], "servers") != 0))
+    this->response = "Command not found. Type 'help' to see all available commands. Type 'exit' to disconnect.";
+  }
+  if (cmds[1] == NULL || cmds[2] != NULL || (strcmp(cmds[1], "users") != 0 && strcmp(cmds[1], "servers") != 0)) {
     std::cout << "Syntax error. The command must be 'show users' or 'show servers'." << std::endl;
+    this->response = "Syntax error. The command must be 'show users' or 'show servers'.";
+  }
   else if (strcmp(cmds[0], "show") == 0 && strcmp(cmds[1], "servers") == 0)
     sf->printFactory();
   else if (strcmp(cmds[0], "show") == 0 && strcmp(cmds[1], "users") == 0)
     uf->printFactory();
-  else
+  else {
     std::cout << "Command not found. Type 'help' to see all available commands. Type 'exit' to disconnect." << std::endl;
+    this->response = "Command not found. Type 'help' to see all available commands. Type 'exit' to disconnect.";
+  }
 }
 
 void Cmd::execKick(char **cmds, UserFactory *uf, ServerFactory *sf, User *user) {
-  if (cmds[1] == NULL || cmds[2] == NULL || cmds[3] != NULL)
+  if (cmds[1] == NULL || cmds[2] == NULL || cmds[3] != NULL) {
     std::cout << "Syntax error. The command must be 'kick [username] [ip server]'." << std::endl;
+    this->response = "Syntax error. The command must be 'kick [username] [ip server]'.";
+  }
   else if (strcmp(cmds[0], "kick") == 0 && user->isAdmin() == true) {
-    if (uf->isInList(cmds[1]) == false)
-      std::cout << "Error: cannot find user " << cmds[1] << " in Spatch." << std::endl;	
-    else if (sf->isInList(cmds[2]) == false)
+    if (uf->isInList(cmds[1]) == false) {
+      std::cout << "Error: cannot find user " << cmds[1] << " in Spatch." << std::endl;
+      this->response = "Error: cannot find user " + cmds[1] + " in Spatch.";
+    }
+    else if (sf->isInList(cmds[2]) == false) {
       std::cout << "Error: cannot find server " << cmds[2] << " in Spatch." << std::endl;
+      this->response = "Error: cannot find server " + cmds[2] + " in Spatch."
+    }
     else
       sf->getServerByIp(cmds[2])->disconnectUser(uf->getUserByName(cmds[1]));
   }
-  else
+  else {
     std::cout << "Command not found. Type 'help' to see all available commands. Type 'exit' to disconnect." << std::endl;
+    this->response = "Command not found. Type 'help' to see all available commands. Type 'exit' to disconnect.";
+  }
 }
 
 void Cmd::execBan(char **cmds, UserFactory *uf, ServerFactory *sf, User *user) {
-  if (cmds[1] == NULL || cmds[2] == NULL || cmds[3] != NULL)
+  if (cmds[1] == NULL || cmds[2] == NULL || cmds[3] != NULL) {
     std::cout << "Syntax error. The command must be 'ban [username] [ip server]'." << std::endl;
+    this->response = "Syntax error. The command must be 'ban [username] [ip server]'.";
+  }
   else if (strcmp(cmds[0], "ban") == 0 && user->isAdmin() == true) {
-    if (uf->isInList(cmds[1]) == false)
-      std::cout << "Error: cannot find user " << cmds[1] << " in Spatch." << std::endl;	
-    else if (sf->isInList(cmds[2]) == false)
+    if (uf->isInList(cmds[1]) == false) {
+      std::cout << "Error: cannot find user " << cmds[1] << " in Spatch." << std::endl;
+      this->response = "Error: cannot find user " + cmds[1] + " in Spatch.";
+    }
+    else if (sf->isInList(cmds[2]) == false) {
       std::cout << "Error: cannot find server " << cmds[2] << " in Spatch." << std::endl;
+      this->response = "Error: cannot find server " + cmds[2] + " in Spatch."
+    }
     else
       sf->getServerByIp(cmds[2])->banUser(uf->getUserByName(cmds[1]));
   }
-  else
+  else {
     std::cout << "Command not found. Type 'help' to see all available commands. Type 'exit' to disconnect." << std::endl;
+    this->response = "Command not found. Type 'help' to see all available commands. Type 'exit' to disconnect.";
+  }
 }
 
 void Cmd::execUnban(char **cmds, UserFactory *uf, ServerFactory *sf, User *user) {
-  if (cmds[1] == NULL || cmds[2] == NULL)
+  if (cmds[1] == NULL || cmds[2] == NULL) {
     std::cout << "Syntax error. The command must be 'unban [username] [ip server]'." << std::endl;
+    this->response = "Syntax error. The command must be 'unban [username] [ip server]'.";
+  }
   else if (strcmp(cmds[0], "unban") == 0 && user->isAdmin() == true) {
-    if (uf->isInList(cmds[1]) == false)
-      std::cout << "Error: cannot find user " << cmds[1] << " in Spatch." << std::endl;	
-    else if (sf->isInList(cmds[2]) == false)
+    if (uf->isInList(cmds[1]) == false) {
+      std::cout << "Error: cannot find user " << cmds[1] << " in Spatch." << std::endl;
+      this->response = "Error: cannot find user " + cmds[1] + " in Spatch.";
+    }
+    else if (sf->isInList(cmds[2]) == false) {
       std::cout << "Error: cannot find server " << cmds[2] << " in Spatch." << std::endl;
+      this->response = "Error: cannot find server " + cmds[2] + " in Spatch."
+    }
     else
       sf->getServerByIp(cmds[2])->unbanUser(uf->getUserByName(cmds[1]));
   }
-  else
+  else {
     std::cout << "Command not found. Type 'help' to see all available commands. Type 'exit' to disconnect." << std::endl;
+    this->response = "Command not found. Type 'help' to see all available commands. Type 'exit' to disconnect.";
+  }
 }
 
 void Cmd::execAllow(char **cmds, UserFactory *uf, ServerFactory *sf, User *user) {
-  if (cmds[1] == NULL || cmds[2] == NULL || cmds[3] != NULL)
+  if (cmds[1] == NULL || cmds[2] == NULL || cmds[3] != NULL) {
     std::cout << "Syntax error. The command must be 'allow [username] [ip server]'." << std::endl;
+    this->response = "Syntax error. The command must be 'allow [username] [ip server]'.";
+  }
   else if (strcmp(cmds[0], "allow") == 0 && user->isAdmin() == true) {
-    if (uf->isInList(cmds[1]) == false)
-      std::cout << "Error: cannot find user " << cmds[1] << " in Spatch." << std::endl;	
-    else if (sf->isInList(cmds[2]) == false)
+    if (uf->isInList(cmds[1]) == false) {
+      std::cout << "Error: cannot find user " << cmds[1] << " in Spatch." << std::endl;
+      this->response = "Error: cannot find user " + cmds[1] + " in Spatch.";
+    }
+    else if (sf->isInList(cmds[2]) == false) {
       std::cout << "Error: cannot find server " << cmds[2] << " in Spatch." << std::endl;
+      this->response = "Error: cannot find server " + cmds[2] + " in Spatch."
+    }
     else
       sf->getServerByIp(cmds[2])->allowUser(uf->getUserByName(cmds[1]));
   }
-  else
+  else {
     std::cout << "Command not found. Type 'help' to see all available commands. Type 'exit' to disconnect." << std::endl;
+    this->response = "Command not found. Type 'help' to see all available commands. Type 'exit' to disconnect.";
+  }
 }
 
 void Cmd::execUnallow(char **cmds, UserFactory *uf, ServerFactory *sf, User *user) {
-  if (cmds[1] == NULL || cmds[2] == NULL || cmds[3] != NULL)
+  if (cmds[1] == NULL || cmds[2] == NULL || cmds[3] != NULL) {
     std::cout << "Syntax error. The command must be 'unallow [username] [ip server]'." << std::endl;
+    this->response = "Syntax error. The command must be 'unallow [username] [ip server]'.";
+  }
   else if (strcmp(cmds[0], "unallow") == 0 && user->isAdmin() == true) {
-    if (uf->isInList(cmds[1]) == false)
-      std::cout << "Error: cannot find user " << cmds[1] << " in Spatch." << std::endl;	
-    else if (sf->isInList(cmds[2]) == false)
+    if (uf->isInList(cmds[1]) == false) {
+      std::cout << "Error: cannot find user " << cmds[1] << " in Spatch." << std::endl;
+      this->response = "Error: cannot find user " + cmds[1] + " in Spatch.";
+    }
+    else if (sf->isInList(cmds[2]) == false) {
       std::cout << "Error: cannot find server " << cmds[2] << " in Spatch." << std::endl;
+      this->response = "Error: cannot find server " + cmds[2] + " in Spatch."
+    }
     else
       sf->getServerByIp(cmds[2])->unallowUser(uf->getUserByName(cmds[1]));
   }
-  else
+  else {
     std::cout << "Command not found. Type 'help' to see all available commands. Type 'exit' to disconnect." << std::endl;
+    this->response = "Command not found. Type 'help' to see all available commands. Type 'exit' to disconnect.";
+  }
 }
 
 void Cmd::execPublic(char **cmds, UserFactory *uf, ServerFactory *sf, User *user) {
-  if (cmds[1] == NULL || cmds[2] != NULL)
+  if (cmds[1] == NULL || cmds[2] != NULL) {
     std::cout << "Syntax error. The command must be 'public [ip server]'." << std::endl;
+    this->response = "Syntax error. The command must be 'public [ip server]'.";
+  }
   else if (strcmp(cmds[0], "public") == 0 && user->isAdmin() == true) {
     if (sf->isInList(cmds[1]) == true)
       sf->getServerByIp(cmds[1])->setIsPublic(true);
-    else
+    else {
       std::cout << "Error: cannot find server " << cmds[1] << " in Spatch." << std::endl;
+      this->response = "Error: cannot find server " + cmds[2] + " in Spatch."
+    }
   }
-  else
+  else {
     std::cout << "Command not found. Type 'help' to see all available commands. Type 'exit' to disconnect." << std::endl;
+    this->response = "Command not found. Type 'help' to see all available commands. Type 'exit' to disconnect.";
+  }
 }
 
 void Cmd::execPrivate(char **cmds, UserFactory *uf, ServerFactory *sf, User *user) {
-  if (cmds[1] == NULL || cmds[2] != NULL)
-    std::cout << "Syntax error. The command must be 'public [ip server]'." << std::endl;
+  if (cmds[1] == NULL || cmds[2] != NULL) {
+    std::cout << "Syntax error. The command must be 'private [ip server]'." << std::endl;
+    this->response = "Syntax error. The command must be 'private [ip server]'.";
+  }
   else if (strcmp(cmds[0], "private") == 0 && user->isAdmin() == true) {
     if (sf->isInList(cmds[1]) == true)
       sf->getServerByIp(cmds[1])->setIsPublic(false);
-    else
+    else {
       std::cout << "Error: cannot find server " << cmds[1] << " in Spatch." << std::endl;
+      this->response = "Error: cannot find server " + cmds[2] + " in Spatch."
+    }
   }
-  else
+  else {
     std::cout << "Command not found. Type 'help' to see all available commands. Type 'exit' to disconnect." << std::endl;
+    this->response = "Command not found. Type 'help' to see all available commands. Type 'exit' to disconnect.";
+  }
 }
 
 void Cmd::execHelp(char **cmds, UserFactory *uf, ServerFactory *sf, User *user) {
-  if (strcmp(cmds[0], "help") != 0 || cmds[1] != NULL)
+  if (strcmp(cmds[0], "help") != 0 || cmds[1] != NULL) {
     std::cout << "Command not found. Type 'help' to see all available commands. Type 'exit' to disconnect." << std::endl;
+    this->response = "Command not found. Type 'help' to see all available commands. Type 'exit' to disconnect.";
+  }
   std::cout << "===========COMMANDS============" << std::endl;
   std::cout << "connect [ip server]" << std::endl << "show users" << std::endl << "show servers" << std::endl;
   if (user->isAdmin() == true) {
@@ -160,6 +227,20 @@ void Cmd::execHelp(char **cmds, UserFactory *uf, ServerFactory *sf, User *user) 
   }
   std::cout << "help" << std::endl << "exit" << std::endl;
   std::cout << "===============================" << std::endl;
+  this->response = "===========COMMANDS============\n" +
+    "connect [ip server]\n" +
+    "show users\n" +
+    "show servers\n" +
+    "kick [username] [ip server]\n" +
+    "ban [username] [ip server]\n" +
+    "unban [username] [ip server]\n" +
+    "allow [username] [ip server]\n" +
+    "unallow [username] [ip server]\n" +
+    "public [ip server]\n" +
+    "private [ip server]\n" +
+    "help\n" +
+    "exit\n" +
+    "===============================";
 }
 
 void Cmd::createCmds() {
