@@ -16,9 +16,9 @@ int Spatch::execSpatch() {
   Server *s1 = new Server("111.11.11.1");
   Server *s2 = new Server("222.22.22.2");
   Server *s3 = new Server("333.33.33.3");
-  User *u1 = new User("127.0.0.1", "toto");
-  User *u2 = new User("127.0.0.2", "titi");
-  User *u3 = new User("127.0.0.3", "tutu");
+  User *u1 = new User("toto");
+  User *u2 = new User("titi");
+  User *u3 = new User("tutu");
   int check = 2;
   User *u;
   std::string name;
@@ -37,17 +37,18 @@ int Spatch::execSpatch() {
     else if (check == 1)
       std::cout << "Please enter another username." << std::endl;
     std::cin >> name;
-    u = new User("127.0.0.4", name, true);
+    u = new User(name, true);
     check = this->connectUser(u);
     if (check == 1)
       delete u;
   }
+  std::cout << "Welcome, " << name << ". You are now connected to Spatch. Type 'help' to get all the available commands. Type 'exit' to disconnect." << std::endl;
   check = 1;
   while (1) {
     std::cin.getline(buf, sizeof(buf));
     if (strcmp(buf, "exit") == 0)
       return 0;
-    else if (strcmp(buf, "") != 0) {
+    else if (strcmp(buf, "") != 0 && strcmp(buf, "\n") != 0) {
       this->getCmd()->setCmd(buf);
       this->getCmd()->execCmd(this->getUsersList(), this->getServersList(), u);
     }

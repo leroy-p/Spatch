@@ -14,7 +14,6 @@ public:
   int addUser(User *);
   int deleteUser(User *);
   User *getUserByName(std::string);
-  User *getUserByIp(std::string);
   bool isInList(std::string);
   void printFactory();
 };

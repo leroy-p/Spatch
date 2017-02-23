@@ -1,27 +1,19 @@
 #include "../includes/User.hpp"
 
-User::User(std::string ip, std::string name) {
-  std::cout << "User " << name << " (" << ip << ") has been created." << std::endl;
-  this->ip = ip;
+User::User(std::string name) {
+  std::cout << "User " << name << " has been created." << std::endl;
   this->name = name;
   this->admin = false;
-  createIpAccess();
 }
 
-User::User(std::string ip, std::string name, bool admin) {
-  std::cout << "User " << name << " (" << ip << ") has been created." << std::endl;
-  this->ip = ip;
+User::User(std::string name, bool admin) {
+  std::cout << "User " << name << " has been created." << std::endl;
   this->name = name;
   this->admin = admin;
-  createIpAccess();
 }
 
 User::~User() {
   std::cout << "User " << *this << " has been deleted." << std::endl;
-}
-
-std::string User::getIp() const {
-  return this->ip;
 }
 
 std::string User::getName() const {
@@ -32,45 +24,6 @@ bool User::isAdmin() const {
   return this->admin;
 }
 
-int User::createIpAccess() {
-  std::ifstream infile("config.txt");
-  std::string line;
-  char **sep;
-  char *tmp;
-  int i = 0;
-  
-  if ((sep = (char **)malloc(255 * sizeof(char *))) == NULL) {
-    std::cerr << "Error: malloc failed." << std::endl;
-    return 1;
-  }
-  while (std::getline(infile, line)) {
-    if (strncmp(this->ip.c_str(), line.c_str(), this->ip.length()) == 0) {
-      tmp = strtok((char *)line.c_str(), "|;");
-      while (tmp != NULL) {
-	sep[i++] = tmp;
-	tmp = strtok(NULL, "|;");
-      }
-      i = 1;
-      while (sep[i])
-	this->ipAccess.push_back(sep[i++]);
-    }
-  }
-  return 0;
-}
-
-bool User::isAutorized(std::string ip) {
-  std::list<std::string>::iterator it;
-  
-  for (it = this->ipAccess.begin(); it != this->ipAccess.end(); ++it) {
-    if (ip.compare(*it) == 0) {
-      std::cout << "User " << *this << " has access to the server " << ip << "." << std::endl;
-      return true;
-    }
-  }
-  std::cout << "User " << *this << " does not have access to the server " << ip << "." << std::endl;
-  return false;
-}
-
 std::ostream& operator<<(std::ostream& out, const User& user) {
-  return out << user.getName() << " (" << user.getIp() << ")";
+  return out << user.getName();
 }

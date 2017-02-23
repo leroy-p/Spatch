@@ -60,19 +60,6 @@ User *UserFactory::getUserByName(std::string name) {
   return NULL;
 }
 
-User *UserFactory::getUserByIp(std::string ip) {
-  std::list<User *>::iterator it;
-
-  for (it = this->usersList.begin(); it != this->usersList.end(); ++it) {
-    if ((*it)->getIp().compare(ip) == 0) {
-      return *it;
-      break;
-    }
-  }
-  std::cout << "User with IP " << ip << " not found." << std::endl;
-  return NULL;
-}
-
 void UserFactory::printFactory() {
   std::list<User *>::iterator it;
 
