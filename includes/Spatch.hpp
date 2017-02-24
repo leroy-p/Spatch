@@ -6,6 +6,8 @@
 
 #include <libssh/libssh.h>
 #include <libssh/server.h>
+#include <libssh/callbacks.h>
+#include <libssh/sftp.h>
 
 #include <stdlib.h>
 #include <string>
@@ -26,9 +28,13 @@ public:
   Spatch();
   Spatch(int port);
   ~Spatch();
+
+  bool isUserInFile(std::string);
   int execSpatch();
-  void onceConnected(User *u);
+  std::string getPassword(std::string);
+  void onceConnected(User*);
   void sshStuff();
+  int connection();
   int initSsh();
   ServerFactory *getServersList() const;
   UserFactory *getUsersList() const;

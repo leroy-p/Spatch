@@ -22,6 +22,30 @@ Spatch::~Spatch() {
   std::cout << "You have left Spatch." << std::endl;
 }
 
+bool Spatch::isUserInFile(std::string name) {
+  std::ifstream infile("../users.conf");
+  std::string line;
+
+  while (std::getline(infile, line)) {
+    int i = line.find_first_of(":", 0);
+    if (line.substr(0, i).compare(name) == 0)
+ 	return true;
+   }
+   return false;
+ }
+
+ std::string Spatch::getPassword(std::string name) {
+   std::ifstream infile("../users.conf");
+   std::string line;
+
+   while (std::getline(infile, line)) {
+     int i = line.find_first_of(":", 0);
+     if (line.substr(0, i).compare(name) == 0)
+       return line.substr(name.length() + 1, line.length() - name.length() - 3);
+   }
+   return "";
+ }
+
 void Spatch::sshStuff(){
 	ssh_message message;
 	int 				auth=0;
@@ -43,8 +67,7 @@ void Spatch::sshStuff(){
 											printf("User %s wants to auth with pass %s\n",
 														 ssh_message_auth_user(message),
 														 ssh_message_auth_password(message));
-														 if(strncmp(ssh_message_auth_password(message), "test", strlen("test")) == 0) {
-																//if(isFirstConnection(ssh_message_auth_user(message)) ||strncmp(ssh_message_auth_password(message), getUserPassword(ssh_message_auth_user(message)), strlen("test")) == 0) {
+                                if(!isUserInFile(ssh_message_auth_user(message)) || strncmp(ssh_message_auth_password(message), getPassword(ssh_message_auth_user(message)).c_str(), getPassword(ssh_message_auth_user(message)).length()) == 0) {
                                 u = new User(ssh_message_auth_user(message), true);
                                 std::string response = "Welcome to spatch.";
                                 ssh_channel_write(chan, response.c_str(), response.length());
@@ -125,6 +148,9 @@ void Spatch::onceConnected(User *u){
 							printf("error writing to buffer\n");
 					} else {
             char *cmd = parse_buf(buf);
+            if (strcmp("ssh", cmd) == 0){
+              connection();
+            }
             std::cout<<cmd<<std::endl;
             this->getCmd()->setCmd(cmd);
             this->getCmd()->execCmd(this->getUsersList(), this->getServersList(), u);
@@ -135,6 +161,27 @@ void Spatch::onceConnected(User *u){
 			}
 	} while (i>0);
 
+}
+
+int Spatch::connection(){
+  ssh_session my_ssh_session;
+ int rc;
+ int port = 4567;
+ my_ssh_session = ssh_new();
+ if (my_ssh_session == NULL)
+   return (-1);
+ ssh_options_set(my_ssh_session, SSH_OPTIONS_HOST, "127.0.0.1");
+ ssh_options_set(my_ssh_session, SSH_OPTIONS_PORT, &port);
+
+ rc = ssh_connect(my_ssh_session);
+ if (rc != SSH_OK)
+ {
+   fprintf(stderr, "Error connecting to localhost: %s\n",
+           ssh_get_error(my_ssh_session));
+   return (-1);
+ }
+ ssh_disconnect(my_ssh_session);
+ ssh_free(my_ssh_session);
 }
 
 char *Spatch::parse_buf(char *buf) {
