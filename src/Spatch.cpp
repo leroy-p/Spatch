@@ -1,6 +1,16 @@
 #include "../includes/Spatch.hpp"
 
+Spatch::Spatch(int port) {
+  this->port = port;
+  this->serversList = new ServerFactory();
+  this->usersList = new UserFactory();
+  this->cmd = new Cmd();
+  std::cout << "Welcome to Spatch." << std::endl;
+  this->execSpatch();
+}
+
 Spatch::Spatch() {
+  this->port = 4577;
   this->serversList = new ServerFactory();
   this->usersList = new UserFactory();
   this->cmd = new Cmd();
@@ -111,21 +121,41 @@ void Spatch::onceConnected(User *u){
 	do{
 			i=ssh_channel_read(chan,buf, 2048, 0);
 		 if(i>0) {
-          this->getCmd()->setCmd(buf);
-          this->getCmd()->execCmd(this->getUsersList(), this->getServersList(), u);
-          std::string response = this->getCmd()->getResponse();
-					ssh_channel_write(chan, response.c_str(), response.length());
 					if (write(1,buf,i) < 0) {
 							printf("error writing to buffer\n");
-					}
+					} else {
+            char *cmd = parse_buf(buf);
+            std::cout<<cmd<<std::endl;
+            this->getCmd()->setCmd(cmd);
+            this->getCmd()->execCmd(this->getUsersList(), this->getServersList(), u);
+            std::string response = this->getCmd()->getResponse();
+            ssh_channel_write(chan, response.c_str(), response.length());
+            free(cmd);
+          }
 			}
 	} while (i>0);
 
 }
 
+char *Spatch::parse_buf(char *buf) {
+ char *res;
+ int i;
+
+ if ((res = (char*)malloc(strlen(buf) * sizeof(char)))== NULL) {
+     std::cerr << "Error: malloc failed." << std::endl;
+     return NULL;
+ }
+ i = 0;
+ while (buf[i] && buf[i] != '\n') {
+   res[i] = buf[i];
+   i++;
+ }
+ res[i] = '\0';
+ return res;
+}
+
 int Spatch::initSsh(){
     ssh_bind sshbind;
-    int port = 4577;
     int verbosity = SSH_LOG_PROTOCOL;
 		int 				r;
 
@@ -135,7 +165,7 @@ int Spatch::initSsh(){
     ssh_bind_options_set(sshbind, SSH_BIND_OPTIONS_DSAKEY, KEYS_FOLDER "ssh_host_dsa_key");
     ssh_bind_options_set(sshbind, SSH_BIND_OPTIONS_RSAKEY, KEYS_FOLDER "ssh_host_rsa_key");
 
-    ssh_bind_options_set(sshbind, SSH_BIND_OPTIONS_BINDPORT, &port);
+    ssh_bind_options_set(sshbind, SSH_BIND_OPTIONS_BINDPORT, &(this->port));
     ssh_bind_options_set(sshbind, SSH_BIND_OPTIONS_LOG_VERBOSITY, &verbosity);
    // ssh_bind_options_set(sshbind, SSH_OPTIONS_HOST, "0.0.0.0");
     if(ssh_bind_listen(sshbind)<0){

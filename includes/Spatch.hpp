@@ -20,9 +20,11 @@ private:
   UserFactory *usersList;
   Cmd *cmd;
   ssh_session session;
+  int port;
 
 public:
   Spatch();
+  Spatch(int port);
   ~Spatch();
   int execSpatch();
   void onceConnected(User *u);
@@ -31,6 +33,7 @@ public:
   ServerFactory *getServersList() const;
   UserFactory *getUsersList() const;
   Cmd *getCmd() const;
+  char* parse_buf(char *buf);
   int connectUser(User *);
   int disconnectUser(User *);
   int addServer(Server *);
