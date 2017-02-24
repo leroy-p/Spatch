@@ -14,7 +14,7 @@ public:
   int addServer(Server *);
   int deleteServer(Server *);
   Server *getServerByIp(std::string);
-  void printFactory();
+  std::string printFactory();
   bool isInList(std::string);
 };
 

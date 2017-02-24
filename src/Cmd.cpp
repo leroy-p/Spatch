@@ -55,9 +55,9 @@ void Cmd::execShow(char **cmds, UserFactory *uf, ServerFactory *sf, User *user) 
     this->response = "Syntax error. The command must be 'show users' or 'show servers'.\n";
   }
   else if (strcmp(cmds[0], "show") == 0 && strcmp(cmds[1], "servers") == 0)
-    sf->printFactory();
+    this->response = sf->printFactory();
   else if (strcmp(cmds[0], "show") == 0 && strcmp(cmds[1], "users") == 0)
-    uf->printFactory();
+    this->response = uf->printFactory();
   else {
     std::cout << "Command not found. Type 'help' to see all available commands. Type 'exit' to disconnect." << std::endl;
     this->response = "Command not found. Type 'help' to see all available commands. Type 'exit' to disconnect.\n";

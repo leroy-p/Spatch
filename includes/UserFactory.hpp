@@ -15,7 +15,7 @@ public:
   int deleteUser(User *);
   User *getUserByName(std::string);
   bool isInList(std::string);
-  void printFactory();
+  std::string printFactory();
 };
 
 #endif

@@ -60,13 +60,17 @@ User *UserFactory::getUserByName(std::string name) {
   return NULL;
 }
 
-void UserFactory::printFactory() {
+std::string UserFactory::printFactory() {
   std::list<User *>::iterator it;
+  std::string res;
 
-  std::cout << "=============USERS=============" << std::endl;
-  for (it = this->usersList.begin(); it != this->usersList.end(); ++it)
-    std::cout << *(*it) << std::endl;
-  std::cout << "===============================" << std::endl;
+  res = "=============USERS=============\n";
+  for (it = this->usersList.begin(); it != this->usersList.end(); ++it) {
+    res += (*it)->getName();
+    res += "\n";
+  }
+  res += "===============================\n";
+  return res;
 }
 
 bool UserFactory::isInList(std::string name) {

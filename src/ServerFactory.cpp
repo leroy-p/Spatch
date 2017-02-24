@@ -60,13 +60,17 @@ Server *ServerFactory::getServerByIp(std::string ip) {
   return NULL;
 }
 
-void ServerFactory::printFactory() {
+std::string ServerFactory::printFactory() {
   std::list<Server *>::iterator it;
+  std::string res;
 
-  std::cout << "============SERVERS============" << std::endl;
-  for (it = this->serversList.begin(); it != this->serversList.end(); ++it)
-    std::cout << (*it)->getIp() << std::endl;
-  std::cout << "===============================" << std::endl;
+  res = "============SERVERS============\n";
+  for (it = this->serversList.begin(); it != this->serversList.end(); ++it) {
+    res += (*it)->getIp();
+    res += "\n";
+  }
+  res += "===============================\n";
+  return res;
 }
 
 bool ServerFactory::isInList(std::string ip) {
