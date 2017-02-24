@@ -32,7 +32,8 @@ void Cmd::execConnect(char **cmds, UserFactory *uf, ServerFactory *sf, User *use
       sf->getServerByIp(cmds[1])->connectUser(user);
     else {
       std::cout << "Error: cannot find server " << cmds[1] << " in Spatch." << std::endl;
-      this->response = strcat("Error: cannot find server ", strcat(cmds[1], " in Spatch."));
+      std::string server(cmds[1]);
+      this->response = "Error: cannot find server " + server + " in Spatch.";
     }
   }
   else {
@@ -68,11 +69,13 @@ void Cmd::execKick(char **cmds, UserFactory *uf, ServerFactory *sf, User *user) 
   else if (strcmp(cmds[0], "kick") == 0 && user->isAdmin() == true) {
     if (uf->isInList(cmds[1]) == false) {
       std::cout << "Error: cannot find user " << cmds[1] << " in Spatch." << std::endl;
-      this->response = "Error: cannot find user " + cmds[1] + " in Spatch.";
+      std::string name(cmds[1]);
+      this->response = "Error: cannot find user " + name + " in Spatch.";
     }
     else if (sf->isInList(cmds[2]) == false) {
       std::cout << "Error: cannot find server " << cmds[2] << " in Spatch." << std::endl;
-      this->response = "Error: cannot find server " + cmds[2] + " in Spatch."
+      std::string server(cmds[2]);
+      this->response = "Error: cannot find server " + server + " in Spatch.";
     }
     else
       sf->getServerByIp(cmds[2])->disconnectUser(uf->getUserByName(cmds[1]));
@@ -91,11 +94,13 @@ void Cmd::execBan(char **cmds, UserFactory *uf, ServerFactory *sf, User *user) {
   else if (strcmp(cmds[0], "ban") == 0 && user->isAdmin() == true) {
     if (uf->isInList(cmds[1]) == false) {
       std::cout << "Error: cannot find user " << cmds[1] << " in Spatch." << std::endl;
-      this->response = "Error: cannot find user " + cmds[1] + " in Spatch.";
+      std::string name(cmds[1]);
+      this->response = "Error: cannot find user " + name + " in Spatch.";
     }
     else if (sf->isInList(cmds[2]) == false) {
       std::cout << "Error: cannot find server " << cmds[2] << " in Spatch." << std::endl;
-      this->response = "Error: cannot find server " + cmds[2] + " in Spatch."
+      std::string server(cmds[2]);
+      this->response = "Error: cannot find server " + server + " in Spatch.";
     }
     else
       sf->getServerByIp(cmds[2])->banUser(uf->getUserByName(cmds[1]));
@@ -114,11 +119,13 @@ void Cmd::execUnban(char **cmds, UserFactory *uf, ServerFactory *sf, User *user)
   else if (strcmp(cmds[0], "unban") == 0 && user->isAdmin() == true) {
     if (uf->isInList(cmds[1]) == false) {
       std::cout << "Error: cannot find user " << cmds[1] << " in Spatch." << std::endl;
-      this->response = "Error: cannot find user " + cmds[1] + " in Spatch.";
+      std::string name(cmds[1]);
+      this->response = "Error: cannot find user " + name + " in Spatch.";
     }
     else if (sf->isInList(cmds[2]) == false) {
       std::cout << "Error: cannot find server " << cmds[2] << " in Spatch." << std::endl;
-      this->response = "Error: cannot find server " + cmds[2] + " in Spatch."
+      std::string server(cmds[2]);
+      this->response = "Error: cannot find server " + server + " in Spatch.";
     }
     else
       sf->getServerByIp(cmds[2])->unbanUser(uf->getUserByName(cmds[1]));
@@ -137,11 +144,13 @@ void Cmd::execAllow(char **cmds, UserFactory *uf, ServerFactory *sf, User *user)
   else if (strcmp(cmds[0], "allow") == 0 && user->isAdmin() == true) {
     if (uf->isInList(cmds[1]) == false) {
       std::cout << "Error: cannot find user " << cmds[1] << " in Spatch." << std::endl;
-      this->response = "Error: cannot find user " + cmds[1] + " in Spatch.";
+      std::string name(cmds[1]);
+      this->response = "Error: cannot find user " + name + " in Spatch.";
     }
     else if (sf->isInList(cmds[2]) == false) {
       std::cout << "Error: cannot find server " << cmds[2] << " in Spatch." << std::endl;
-      this->response = "Error: cannot find server " + cmds[2] + " in Spatch."
+      std::string server(cmds[2]);
+      this->response = "Error: cannot find server " + server + " in Spatch.";
     }
     else
       sf->getServerByIp(cmds[2])->allowUser(uf->getUserByName(cmds[1]));
@@ -160,11 +169,13 @@ void Cmd::execUnallow(char **cmds, UserFactory *uf, ServerFactory *sf, User *use
   else if (strcmp(cmds[0], "unallow") == 0 && user->isAdmin() == true) {
     if (uf->isInList(cmds[1]) == false) {
       std::cout << "Error: cannot find user " << cmds[1] << " in Spatch." << std::endl;
-      this->response = "Error: cannot find user " + cmds[1] + " in Spatch.";
+      std::string name(cmds[1]);
+      this->response = "Error: cannot find user " + name + " in Spatch.";
     }
     else if (sf->isInList(cmds[2]) == false) {
       std::cout << "Error: cannot find server " << cmds[2] << " in Spatch." << std::endl;
-      this->response = "Error: cannot find server " + cmds[2] + " in Spatch."
+      std::string server(cmds[1]);
+      this->response = "Error: cannot find server " + server + " in Spatch.";
     }
     else
       sf->getServerByIp(cmds[2])->unallowUser(uf->getUserByName(cmds[1]));
@@ -185,7 +196,8 @@ void Cmd::execPublic(char **cmds, UserFactory *uf, ServerFactory *sf, User *user
       sf->getServerByIp(cmds[1])->setIsPublic(true);
     else {
       std::cout << "Error: cannot find server " << cmds[1] << " in Spatch." << std::endl;
-      this->response = "Error: cannot find server " + cmds[2] + " in Spatch."
+      std::string server(cmds[1]);
+      this->response = "Error: cannot find server " + server + " in Spatch.";
     }
   }
   else {
@@ -204,7 +216,8 @@ void Cmd::execPrivate(char **cmds, UserFactory *uf, ServerFactory *sf, User *use
       sf->getServerByIp(cmds[1])->setIsPublic(false);
     else {
       std::cout << "Error: cannot find server " << cmds[1] << " in Spatch." << std::endl;
-      this->response = "Error: cannot find server " + cmds[2] + " in Spatch."
+      std::string server(cmds[1]);
+      this->response = "Error: cannot find server " + server + " in Spatch.";
     }
   }
   else {
@@ -231,20 +244,7 @@ void Cmd::execHelp(char **cmds, UserFactory *uf, ServerFactory *sf, User *user) 
   }
   std::cout << "help" << std::endl << "exit" << std::endl;
   std::cout << "===============================" << std::endl;
-  this->response = "===========COMMANDS============\n" +
-    "connect [ip server]\n" +
-    "show users\n" +
-    "show servers\n" +
-    "kick [username] [ip server]\n" +
-    "ban [username] [ip server]\n" +
-    "unban [username] [ip server]\n" +
-    "allow [username] [ip server]\n" +
-    "unallow [username] [ip server]\n" +
-    "public [ip server]\n" +
-    "private [ip server]\n" +
-    "help\n" +
-    "exit\n" +
-    "===============================";
+  this->response = "===========COMMANDS============\nconnect [ip server]\n show users\nshow servers\nkick [username] [ip server]\nban [username] [ip server]\nunban [username] [ip server]\nallow [username] [ip server]\nunallow [username] [ip server]\npublic [ip server]\nprivate [ip server]\nhelp\nexit\n===============================";
 }
 
 void Cmd::createCmds() {
