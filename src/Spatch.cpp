@@ -22,8 +22,17 @@ Spatch::~Spatch() {
   std::cout << "You have left Spatch." << std::endl;
 }
 
+int Spatch::addUserInFile(std::string name, std::string password) {
+ std::ofstream outfile("./users.conf", std::ios_base::app);
+ std::string strBuf = "\n" + name + ":" + password + "/0";
+
+ outfile << strBuf;
+ outfile.close();
+ return 0;
+}
+
 bool Spatch::isUserInFile(std::string name) {
-  std::ifstream infile("../users.conf");
+  std::ifstream infile("./users.conf");
   std::string line;
 
   while (std::getline(infile, line)) {
@@ -35,7 +44,7 @@ bool Spatch::isUserInFile(std::string name) {
  }
 
  std::string Spatch::getPassword(std::string name) {
-   std::ifstream infile("../users.conf");
+   std::ifstream infile("./users.conf");
    std::string line;
 
    while (std::getline(infile, line)) {
@@ -68,7 +77,10 @@ void Spatch::sshStuff(){
 														 ssh_message_auth_user(message),
 														 ssh_message_auth_password(message));
                                 if(!isUserInFile(ssh_message_auth_user(message)) || strncmp(ssh_message_auth_password(message), getPassword(ssh_message_auth_user(message)).c_str(), getPassword(ssh_message_auth_user(message)).length()) == 0) {
-                                u = new User(ssh_message_auth_user(message), true);
+                                  if (!isUserInFile(ssh_message_auth_user(message))){
+                                      addUserInFile(ssh_message_auth_user(message), ssh_message_auth_password(message));
+                                  }
+                                  u = new User(ssh_message_auth_user(message), true);
                                 std::string response = "Welcome to spatch.";
                                 ssh_channel_write(chan, response.c_str(), response.length());
                                 this->connectUser(u);
@@ -182,7 +194,8 @@ int Spatch::connection(){
  }
  ssh_disconnect(my_ssh_session);
  ssh_free(my_ssh_session);
-}
+return 0;
+  }
 
 char *Spatch::parse_buf(char *buf) {
  char *res;

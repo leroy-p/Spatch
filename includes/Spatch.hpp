@@ -33,6 +33,7 @@ public:
   int execSpatch();
   std::string getPassword(std::string);
   void onceConnected(User*);
+  int addUserInFile(std::string, std::string);
   void sshStuff();
   int connection();
   int initSsh();
